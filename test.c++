@@ -1,63 +1,59 @@
 int A, B, C, D;
 
+int led1 = 0;   // D3 = GPIO0
+int led2 = 14;  // D5 = GPIO14
+int led3 = 12;  // D6 = GPIO12
+
 void setup() {
   Serial.begin(9600);
 
-  pinMode(3, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
 
-  randomSeed(analogRead(0)); // voor willekeurigheid
+  randomSeed(analogRead(A0));
 }
 
 void loop() {
-  // Maak 4 random getallen
   A = random(999);
   B = random(999);
   C = random(999);
   D = random(999);
 
-  // Print waarden
-  Serial.print("A: "); Serial.print(A);
-  Serial.print(" B: "); Serial.print(B);
-  Serial.print(" C: "); Serial.print(C);
-  Serial.print(" D: "); Serial.println(D);
+  Serial.print("A = "); Serial.print(A);
+  Serial.print(" | B = "); Serial.print(B);
+  Serial.print(" | C = "); Serial.print(C);
+  Serial.print(" | D = "); Serial.println(D);
 
-  // D3: A > B OF A < C
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+
   if (A > B || A < C) {
-    digitalWrite(3, HIGH);
-  } else {
-    digitalWrite(3, LOW);
+    digitalWrite(led1, HIGH);
   }
 
-  // D5: C > A EN A < B
   if (C > A && A < B) {
-    digitalWrite(5, HIGH);
-  } else {
-    digitalWrite(5, LOW);
+    digitalWrite(led2, HIGH);
   }
 
-  // D6: B > C EN B > A EN C < A
   if (B > C && B > A && C < A) {
-    digitalWrite(6, HIGH);
-  } else {
-    digitalWrite(6, LOW);
+    digitalWrite(led3, HIGH);
   }
 
-  // Als D het grootste getal is → alle lampen knipperen
   if (D > A && D > B && D > C) {
-    for (int i = 0; i < 10; i++) { // snel knipperen
-      digitalWrite(3, HIGH);
-      digitalWrite(5, HIGH);
-      digitalWrite(6, HIGH);
+    for (int i = 0; i < 10; i++) {
+      digitalWrite(led1, HIGH);
+      digitalWrite(led2, HIGH);
+      digitalWrite(led3, HIGH);
       delay(100);
 
-      digitalWrite(3, LOW);
-      digitalWrite(5, LOW);
-      digitalWrite(6, LOW);
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
       delay(100);
     }
   }
 
-  delay(10000); // wacht 10 seconden
+  delay(10000);
 }
